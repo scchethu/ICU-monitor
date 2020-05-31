@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>ICU Monitor</title>
+	<link rel="stylesheet" href="css/bootstrap.min.css">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style type="text/css">
+	
+.teal{
+
+	background-color: #9c27b0;
+}
+
+</style>
+</head>
+<body class="container-fluid mt-1">
+
+<div class="bg-white text-warning p-1 text-center rounded-lg shadow font-weight-bold"  >
+	
+<h3>ICU MONITOR</h3>
+</div>
+
+<div class="container-fluid mt-3">
+	<div class="row">
+	<div class="col-md-3 col-sm-6 ">
+		<div class="teal text-center text-white p-1">
+			Parameters
+
+		</div>
+
+		<div class="card m-2 rounded shadow">
+		<!-- <div class="card-header teal text-white">
+			Text
+		</div> -->
+			<img src="img/heart.jpg" class="img-fluid">	
+		<div class="card-body font-weight-bold text-danger">
+			<span>Heart rate</span>
+			<span class="float-right" id="a">80%</span>
+		</div>
+		</div>
+
+
+
+		<div class="card m-2 rounded shadow">
+		<!-- <div class="card-header teal text-white">
+			Text
+		</div> -->
+			<img src="img/heart.jpg" class="img-fluid">	
+		<div class="card-body font-weight-bold text-danger">
+			<span>Heart rate</span>
+			<span class="float-right" id="b">80%</span>
+		</div>
+		</div>
+	</div>
+	<div class="col-md-9  col-sm-6">
+		<div class="teal text-center text-white p-1">
+		Monitoring Environment 
+		</div>
+		<div class="row">
+			
+			<div class="col-md-6 text-center mt-2">
+			
+
+				 <canvas id="temp" height="300px"></canvas>
+
+			</div>
+			<div class="col-md-6 text-center mt-2">
+				 <canvas id="hum" height="300px"></canvas>
+			</div>
+		</div>
+
+
+
+	</div>
+
+
+</div>
+</div>
+
+
+
+
+
+</body>
+<script src="js/jquery.min.js"></script>
+
+<!-- Popper JS -->
+<script src="js/popper.min.js"></script>
+
+<!-- Latest compiled JavaScript -->
+<script src="js/bootstrap.min.js"></script>
+  <script src="js/moment.min.js"></script>
+  <script src="js/Chart.js"></script>
+  <script src="js/utils.js"></script>
+<script src="js/temp.js" type="text/javascript"></script>
+<script src="js/hum.js" type="text/javascript"></script>
+<script src="js/mqtt.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+	
+
+$(document).ready(function(){
+
+ MQTTconnect();
+
+         var ctx = document.getElementById("temp").getContext("2d");
+      window.temp = new Chart(ctx, temp_config);
+    
+      var ctx = document.getElementById("hum").getContext("2d");
+      window.hum = new Chart(ctx, hum_config);
+    temp_config.data.datasets[0].data.pop();
+    temp_config.data.datasets[0].data.pop();
+    temp_config.data.datasets[0].data.pop();
+    temp_config.data.datasets[0].data.pop();
+    temp_config.data.datasets[0].data.pop();
+     temp_config.data.datasets[0].data.push({
+            x: new Date(),
+            y:100
+          });
+                window.temp.update();
+                 window.hum.update();
+
+
+});
+
+
+    var mqtt;
+    var reconnectTimeout = 1000;
+    var host,port;
+    useTLS = false;
+   	username = null;
+	password = null;
+    function MQTTconnect() {
+
+       host="broker.mqtt-dashboard.com";
+       port="8000";
+
+
+  if (typeof path == "undefined") {
+    path = '/mqtt';
+  }
+
+  mqtt = new Paho.MQTT.Client(host,parseInt(port),
+      path,
+      "web_" + parseInt(Math.random() * 100, 10)
+  );
+        var options = {
+            timeout: 60,
+            useSSL: false,
+            cleanSession:true,
+            onSuccess: onConnect,
+            onFailure: function (message) {
+       
+
+       			alert("fail to connect"+message);
+            }
+        };
+
+        mqtt.onConnectionLost = onConnectionLost;
+        mqtt.onMessageArrived = onMessageArrived;
+
+        if (username != null) {
+            options.userName = username;
+            options.password = password;
+        }
+       // console.log("Host="+ host + ", port=" + port + ", path=" + path + " useSSL = fa + " username=" + username + " password=" + password);
+ 
+        mqtt.connect(options);
+      
+      
+
+    }
+
+
+
+     function onConnect() {
+
+       alert("connected");
+      
+        mqtt.subscribe("IoT_SYS", {qos: 0});
+         mqtt.subscribe("IoT_DIA", {qos: 0});
+           mqtt.subscribe("IoT_PULSE", {qos: 0});
+             mqtt.subscribe("IoT_TEMP", {qos: 0});
+
+      
+    }
+
+  function onConnectionLost(response) {
+   
+        setTimeout(MQTTconnect, reconnectTimeout);
+  
+    };
+
+    function onMessageArrived(message) {
+
+        var topic = message.destinationName;
+        var payload = message.payloadString;
+        console.log(payload);
+
+        switch(topic)
+        {
+case "IoT_SYS":
+
+
+$('#a').text(payload+" mmHg");
+
+
+break;
+case "IoT_DIA":
+$('#b').text(payload+" mmHg");
+break;
+case "IoT_PULSE":
+hum_config.data.datasets[0].data.push({
+            x: new Date(),
+            y:Number(payload)
+          });
+ window.hum.update();
+
+break;
+case "IoT_TEMP":
+
+
+ temp_config.data.datasets[0].data.push({
+            x: new Date(),
+            y:Number(payload)
+          });
+ window.temp.update();
+
+
+
+
+
+
+        }
+       
+
+
+
+    }
+
+
+
+
+</script>
+
+</html>
