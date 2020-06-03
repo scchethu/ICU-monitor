@@ -35,8 +35,8 @@
 		</div> -->
 			<img src="img/heart.jpg" class="img-fluid">	
 		<div class="card-body font-weight-bold text-danger">
-			<span>Heart rate</span>
-			<span class="float-right" id="a">80%</span>
+			<span>Diastolic</span>
+			<span class="float-right" id="a">80 mbps</span>
 		</div>
 		</div>
 
@@ -48,8 +48,8 @@
 		</div> -->
 			<img src="img/heart.jpg" class="img-fluid">	
 		<div class="card-body font-weight-bold text-danger">
-			<span>Heart rate</span>
-			<span class="float-right" id="b">80%</span>
+			<span>Systolic</span>
+			<span class="float-right" id="b">80 mbps</span>
 		</div>
 		</div>
 	</div>
@@ -79,7 +79,12 @@
 </div>
 
 
-
+<audio id="a1">
+	<source src="a.mp3" type="audio/mpeg">
+</audio>
+<audio id="a2">
+	<source src="b.mp3" type="audio/mpeg">
+</audio>
 
 
 </body>
@@ -131,6 +136,8 @@ $(document).ready(function(){
     useTLS = false;
    	username = null;
 	password = null;
+var x = document.getElementById("a1");
+var y = document.getElementById("a2");
     function MQTTconnect() {
 
        host="broker.mqtt-dashboard.com";
@@ -203,14 +210,29 @@ $(document).ready(function(){
 case "IoT_SYS":
 
 
-$('#a').text(payload+" mmHg");
+$('#a').text(payload+" mbps");
 
+	 var z=Number(payload);
+	if(z>130||z<65)
+	{
+		x.play();
+	}
 
 break;
 case "IoT_DIA":
-$('#b').text(payload+" mmHg");
+	var z=Number(payload);
+$('#b').text(payload+" mbps");
+	if(z>130||z<65)
+	{
+		y.play();
+	}
 break;
 case "IoT_PULSE":
+	var z=Number(payload);
+	if(z>240||z<95)
+	{
+		x.play();
+	}
 hum_config.data.datasets[0].data.push({
             x: new Date(),
             y:Number(payload)
@@ -219,8 +241,11 @@ hum_config.data.datasets[0].data.push({
 
 break;
 case "IoT_TEMP":
-
-
+	var z=Number(payload);
+	if(z>37||z<36)
+	{
+		x.play();
+	}
  temp_config.data.datasets[0].data.push({
             x: new Date(),
             y:Number(payload)
