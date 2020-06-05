@@ -1,0 +1,23 @@
+{
+  "dir" : "ltr",
+  "lang" : "en",
+  "name" : "ICU Monitor",
+  "scope" : "/ICU-monitor/",
+  "display" : "standalone",
+  "start_url" : "https://slekin.com/ICU-monitor/",
+  "short_name" : "ICU Monitor",
+  "theme_color" : "transparent",
+  "description" : "",
+  "orientation" : "portrait",
+  "background_color" : "transparent",
+  "related_applications" : [],
+  "prefer_related_applications" : false,
+  "icons" : [
+    {
+      "src": "https://slekin.com/favicon.ico",
+      "sizes": "32x32"
+    }],
+  "url" : "https://slekin.com/ICU-monitor/",
+  "screenshots" : [],
+  "generated" : "true"
+}

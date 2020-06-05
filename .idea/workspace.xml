@@ -2,6 +2,9 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="07acea58-094d-4d0a-886e-c8cdb0a4f3c7" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/manifes.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/serviceWorker1/pwabuilder-sw-register.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/serviceWorker1/pwabuilder-sw.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/index.html" afterDir="false" />
     </list>
@@ -52,7 +55,7 @@
       <option name="presentableId" value="Default" />
       <updated>1591194653406</updated>
       <workItem from="1591194668910" duration="2284000" />
-      <workItem from="1591330548850" duration="40000" />
+      <workItem from="1591330548850" duration="1067000" />
     </task>
     <servers />
   </component>
